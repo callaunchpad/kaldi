@@ -30,7 +30,7 @@ LM=$final_lm.pr1-7
 # Avoiding re-download, using 'wget --continue ...',
 if [ $stage -le 0 ]; then
   [ -e data/local/downloads/wget_${mic}.sh ] && \
-    echo "$data/local/downloads/wget_${mic}.sh already exists, better quit than re-download... (use --stage N)" && \
+    echo "data/local/downloads/wget_${mic}.sh already exists, better quit than re-download... (use --stage N)" && \
     exit 1
   local/ami_download.sh $mic $AMI_DIR
 fi
@@ -42,7 +42,7 @@ if [ $stage -le 1 ]; then
   local/ami_ihm_scoring_data_prep.sh $AMI_DIR eval
 fi
 
-exit 0
+# exit 0
 
 # Here starts the normal recipe, which is mostly shared across mic scenarios,
 # - for ihm we adapt to speaker by fMLLR,
@@ -51,7 +51,7 @@ exit 0
 # Feature extraction,
 if [ $stage -le 2 ]; then
   for dset in train dev eval; do
-    steps/make_mfcc.sh --nj 15 --cmd "$train_cmd" data/$mic/$dset data/$mic/$dset/log data/$mic/$dset/data
+    steps/make_mfcc.sh --nj 64 --cmd "$train_cmd" data/$mic/$dset data/$mic/$dset/log data/$mic/$dset/data
     steps/compute_cmvn_stats.sh data/$mic/$dset data/$mic/$dset/log data/$mic/$dset/data
   done
   for dset in train eval dev; do utils/fix_data_dir.sh data/$mic/$dset; done
@@ -64,7 +64,7 @@ if [ $stage -le 3 ]; then
 fi
 
 # Train systems,
-nj=30 # number of parallel jobs,
+nj=64 # number of parallel jobs,
 
 if [ $stage -le 4 ]; then
   # Mono,
