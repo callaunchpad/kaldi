@@ -16,8 +16,8 @@
 mic=ihm
 
 # Train systems,
-nj=30 # number of parallel jobs,
-stage=1
+nj=64 # number of parallel jobs,
+stage=0
 . utils/parse_options.sh
 
 base_mic=$(echo $mic | sed 's/[0-9]//g') # sdm, ihm or mdm
@@ -57,7 +57,7 @@ if [ "$base_mic" == "mdm" ]; then
   if [ $stage -le 1 ]; then
     # for MDM data, do beamforming
     ! hash BeamformIt && echo "Missing BeamformIt, run 'cd ../../../tools/; extras/install_beamformit.sh; cd -;'" && exit 1
-    local/ami_beamform.sh --cmd "$train_cmd" --nj 20 $nmics $AMI_DIR $PROCESSED_AMI_DIR
+    local/ami_beamform.sh --cmd "$train_cmd" --nj 64 $nmics $AMI_DIR $PROCESSED_AMI_DIR
   fi
 else
   PROCESSED_AMI_DIR=$AMI_DIR
@@ -86,7 +86,7 @@ fi
 # Feature extraction,
 if [ $stage -le 4 ]; then
   for dset in train dev eval; do
-    steps/make_mfcc.sh --nj 15 --cmd "$train_cmd" data/$mic/$dset
+    steps/make_mfcc.sh --nj 64 --cmd "$train_cmd" data/$mic/$dset
     steps/compute_cmvn_stats.sh data/$mic/$dset
     utils/fix_data_dir.sh data/$mic/$dset
   done
