@@ -10,11 +10,11 @@
 # conf/queue.conf in http://kaldi-asr.org/doc/queue.html for more information,
 # or search for the string 'default_config' in utils/queue.pl or utils/slurm.pl.
 
-export train_cmd="run.pl --mem 1G"
-export decode_cmd="run.pl --mem 2G"
+export train_cmd="run.pl --max-jobs-run 20 --mem 1G"
+export decode_cmd="run.pl --max-jobs-run 20 --mem 2G"
 # the use of cuda_cmd is deprecated but it is sometimes still used in nnet1
 # scripts.
-export cuda_cmd="run.pl --gpu 1 --mem 20G"
+export cuda_cmd="run.pl --max-jobs-run 20 --gpu 1 --mem 20G"
 
 # the rest of this file is present for historical reasons.
 # In general it's best to rely on conf/queue.conf for cluster-specific
